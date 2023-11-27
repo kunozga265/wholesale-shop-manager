@@ -31,3 +31,5 @@ Route::post('/summaries', [\App\Http\Controllers\SummaryController::class,'store
 
 //Shops
 Route::get('/shops', [\App\Http\Controllers\ShopController::class,'index']);
+
+Route::get('/dashboard', [\App\Http\Controllers\AppController::class,'index']);
