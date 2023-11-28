@@ -15,9 +15,9 @@ class SummaryResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'        =>  $this->id,
-            'date'      =>  $this->date,
-            'amount'    =>  $this->amount,
+            'id'        =>  intval($this->id),
+            'date'      =>  intval($this->date),
+            'amount'    =>  floatval($this->amount),
             'type'      =>  $this->type == 0 ? "SALE" : "ORDER" ,
             'user'      =>  new UserResource($this->user),
             'products'  =>  json_decode($this->products),
