@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\SummaryCollection;
 use App\Http\Resources\SummaryResource;
 use App\Models\Inventory;
+use App\Models\Shop;
 use App\Models\Summary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,12 +23,14 @@ class SummaryController extends Controller
         $request->validate([
             "amount"        => 'required',
             "date"          => 'required',
-//            "user_id"       => 'required',
+            "shop_id"       => 'required',
             "type"          => 'required',
             "products"      => 'required',
         ]);
 
-        // order
+        $shop = Shop::findOrFail($request->shop_id);
+
+        // ORDER
         if ($request->type) {
             foreach ($request->products as $product){
                 $inventory = Inventory::findOrFail($product["inventory_id"]);
@@ -35,18 +38,31 @@ class SummaryController extends Controller
                     "stock" => $inventory->stock + $product["quantity"]
                 ]);
             }
-        }else{
+
+            //add total to shop
+            $shop->update([
+                "account_balance"   => $shop->account_balance - $request->amount
+            ]);
+        }
+        //SALE
+        else{
             foreach ($request->products as $product){
                 $inventory = Inventory::findOrFail($product["inventory_id"]);
                 $inventory->update([
                     "stock" => $inventory->stock - $product["quantity"]
                 ]);
             }
+
+            //subtract total from shop
+            $shop->update([
+                "account_balance"   => $shop->account_balance + $request->amount
+            ]);
         }
 
         $summary = Summary::create([
             "amount" => $request->amount,
             "date" => $request->date,
+            "shop_id" => $request->shop_id,
             "user_id" => /*Auth::id()*/ 1,
             "type" => $request->type,
             "products" => json_encode($request->products),

@@ -14,6 +14,11 @@ class Shop extends Model
         return $this->hasMany(Inventory::class);
     }
 
+    public function summaries()
+    {
+        return $this->hasMany(Summary::class);
+    }
+
     protected $fillable=[
         "name",
         "location",

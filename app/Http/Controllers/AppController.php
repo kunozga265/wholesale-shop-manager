@@ -18,13 +18,13 @@ class AppController extends Controller
     public function index()
     {
         $shops = Shop::all();
-        $sales = Summary::where('type',$this->SALE)->orderBy('date','desc')->paginate($this->PAGINATE);
-        $orders = Summary::where('type',$this->ORDER)->orderBy('date','desc')->paginate($this->PAGINATE);
+//        $sales = Summary::where('type',$this->SALE)->orderBy('date','desc')->paginate($this->PAGINATE);
+//        $orders = Summary::where('type',$this->ORDER)->orderBy('date','desc')->paginate($this->PAGINATE);
 
         return response()->json([
             "shops"         => new ShopCollection($shops),
-            "sales"         => new SummaryCollection($sales),
-            "orders"         => new SummaryCollection($orders),
+//            "sales"         => new SummaryCollection($sales),
+//            "orders"         => new SummaryCollection($orders),
         ]);
     }
 }

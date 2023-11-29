@@ -18,6 +18,7 @@ return new class extends Migration
             $table->double("amount");
             $table->double("date");
             $table->integer("user_id");
+            $table->integer("shop_id");
             $table->boolean("type");
             $table->json("products");
             $table->timestamps();

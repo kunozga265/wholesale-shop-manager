@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string("name");
             $table->string("location");
+            $table->double("account_balance");
             $table->timestamps();
         });
     }

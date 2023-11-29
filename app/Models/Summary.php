@@ -14,10 +14,16 @@ class Summary extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function shop()
+    {
+        return $this->belongsTo(Shop::class);
+    }
+
     protected $fillable=[
         "amount",
         "date",
         "user_id",
+        "shop_id",
         "type",
         "products",
     ];
