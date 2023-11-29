@@ -46,7 +46,7 @@ class ShopTableSeeder extends Seeder
             Inventory::create([
                 "shop_id"       =>  $shop->id,
                 "product_id"    =>  $product->id,
-                "stock"         =>  0,
+                "stock"         =>  rand(0,20),
             ]);
         }
     }
