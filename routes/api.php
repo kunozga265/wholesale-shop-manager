@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\SummaryController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,16 +22,45 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/products/seeder', [\App\Http\Controllers\ProductController::class,'store']);
 
-// Inventory
-Route::post('/inventory/{id}', [\App\Http\Controllers\InventoryController::class,'update']);
+Route::post("/users/login",[UserController::class,'login']);
 
-//Summaries
-Route::post('/summaries/{id}', [\App\Http\Controllers\SummaryController::class,'update']);
-Route::get('/summaries', [\App\Http\Controllers\SummaryController::class,'index']);
-Route::post('/summaries', [\App\Http\Controllers\SummaryController::class,'store']);
+//Authenticated Routes
+Route::group(["middleware"=>["auth:sanctum","roles"]],function (){
+
+    Route::get("/dashboard",[
+        "uses" => "App\Http\Controllers\AppController@index",
+    ]);
+
+    Route::post("/users/register", [
+            "uses" => "App\Http\Controllers\UserController@register",
+            'roles' =>['administrator']
+    ]);
+
+    // Inventory
+    Route::post("/inventory/{id}", [
+            "uses" => "App\Http\Controllers\InventoryController@update",
+            'roles' =>['administrator']
+    ]);
+
+    //Shops
+    Route::get('/shops', [\App\Http\Controllers\ShopController::class,'index']);
+
+    //Summaries
+    Route::group(["prefix"=>"summaries"],function (){
+
+        Route::get("/", [
+            "uses" => "App\Http\Controllers\SummaryController@index",
+        ]);
+
+        Route::post("/", [
+            "uses" => "App\Http\Controllers\SummaryController@store",
+        ]);
+
+        Route::post("/{id}", [
+            "uses" => "App\Http\Controllers\SummaryController@update",
+            'roles' =>['administrator']
+        ]);
+    });
 
 
-//Shops
-Route::get('/shops', [\App\Http\Controllers\ShopController::class,'index']);
-
-Route::get('/dashboard', [\App\Http\Controllers\AppController::class,'index']);
+});
