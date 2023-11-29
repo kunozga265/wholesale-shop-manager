@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\SummaryCollection;
 use App\Http\Resources\SummaryResource;
+use App\Models\Inventory;
 use App\Models\Summary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,12 +27,29 @@ class SummaryController extends Controller
             "products"      => 'required',
         ]);
 
+        // order
+        if ($request->type) {
+            foreach ($request->products as $product){
+                $inventory = Inventory::findOrFail($product["inventory_id"]);
+                $inventory->update([
+                    "stock" => $inventory->stock + $product["quantity"]
+                ]);
+            }
+        }else{
+            foreach ($request->products as $product){
+                $inventory = Inventory::findOrFail($product["inventory_id"]);
+                $inventory->update([
+                    "stock" => $inventory->stock - $product["quantity"]
+                ]);
+            }
+        }
+
         $summary = Summary::create([
-            "amount"        => $request->amount,
-            "date"          => $request->date,
-            "user_id"       => /*Auth::id()*/1,
-            "type"          => $request->type,
-            "products"      => json_encode($request->products),
+            "amount" => $request->amount,
+            "date" => $request->date,
+            "user_id" => /*Auth::id()*/ 1,
+            "type" => $request->type,
+            "products" => json_encode($request->products),
         ]);
 
         return response()->json(new SummaryResource($summary));
