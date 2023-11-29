@@ -19,7 +19,7 @@ class UserTableSeeder extends Seeder
         $user = User::create([
             'first_name'    => 'Kunozga',
             'last_name'     => 'Mlowoka',
-            'code'          => (new AppController())->generateUniqueCode(),
+            'code'          => 600,
             'password'      => bcrypt("12345678")
         ]);
         $user->roles()->attach([1]);
@@ -28,7 +28,7 @@ class UserTableSeeder extends Seeder
             'first_name'    => 'Daisy',
             'last_name'     => 'Manyenje',
             'shop_id'       => '1',
-            'code'          => (new AppController())->generateUniqueCode(),
+            'code'          => 700,
             'password'      => bcrypt("12345678")
         ]);
         $user->roles()->attach([2]);
