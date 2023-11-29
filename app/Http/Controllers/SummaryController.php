@@ -6,6 +6,7 @@ use App\Http\Resources\SummaryCollection;
 use App\Http\Resources\SummaryResource;
 use App\Models\Summary;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SummaryController extends Controller
 {
@@ -20,7 +21,7 @@ class SummaryController extends Controller
         $request->validate([
             "amount"        => 'required',
             "date"          => 'required',
-            "user_id"       => 'required',
+//            "user_id"       => 'required',
             "type"          => 'required',
             "products"      => 'required',
         ]);
@@ -28,7 +29,7 @@ class SummaryController extends Controller
         $summary = Summary::create([
             "amount"        => $request->amount,
             "date"          => $request->date,
-            "user_id"       => $request->user_id,
+            "user_id"       => /*Auth::id()*/1,
             "type"          => $request->type,
             "products"      => json_encode($request->products),
         ]);
