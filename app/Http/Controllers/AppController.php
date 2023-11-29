@@ -20,7 +20,15 @@ class AppController extends Controller
 
     public function index()
     {
-        $shops = Shop::all();
+        $shop = [];
+        $user = User::find(Auth::id());
+        if($user->hasRole('administrator')){
+            $shops = Shop::all();
+        }else{
+            $shops[] = $user->shop;
+        }
+
+
 //        $sales = Summary::where('type',$this->SALE)->orderBy('date','desc')->paginate($this->PAGINATE);
 //        $orders = Summary::where('type',$this->ORDER)->orderBy('date','desc')->paginate($this->PAGINATE);
 

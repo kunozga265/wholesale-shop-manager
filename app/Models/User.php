@@ -17,6 +17,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class,'user_role','user_id','role_id');
     }
 
+    public function shop()
+    {
+        return $this->belongsTo(Shop::class);
+    }
+
     public function hasAnyRole($roles)
     {
         if(is_array($roles)){
@@ -49,6 +54,7 @@ class User extends Authenticatable
     protected $fillable = [
         'first_name',
         'last_name',
+        'shop_id',
         'code',
         'password',
     ];
