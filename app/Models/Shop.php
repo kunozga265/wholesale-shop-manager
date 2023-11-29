@@ -22,6 +22,7 @@ class Shop extends Model
     protected $fillable=[
         "name",
         "location",
+        "account_balance",
     ];
 
     protected $hidden=[
