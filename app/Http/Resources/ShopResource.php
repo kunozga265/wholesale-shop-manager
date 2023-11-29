@@ -23,15 +23,16 @@ class ShopResource extends JsonResource
         $orders = $this->summaries()->where("type", (new AppController())->ORDER)->orderBy("date","desc")->limit(31)->get();
 
         return [
-            'id'            =>  intval($this->id),
-            'name'          =>  $this->name,
-            'location'      =>  $this->location,
-            'total'         =>  intval($this->inventory->count()),
-            'low_of_stock'  =>  intval($low_of_stock),
-            'out_of_stock'  =>  intval($out_of_stock),
-            'inventory'     =>  InventoryResource::collection($this->inventory),
-            'sales'         =>  SummaryResource::collection($sales),
-            'orders'        =>  SummaryResource::collection($orders),
+            'id'                =>  intval($this->id),
+            'name'              =>  $this->name,
+            'location'          =>  $this->location,
+            'account_balance'   =>  floatval($this->account_balance),
+            'total'             =>  intval($this->inventory->count()),
+            'low_of_stock'      =>  intval($low_of_stock),
+            'out_of_stock'      =>  intval($out_of_stock),
+            'inventory'         =>  InventoryResource::collection($this->inventory),
+            'sales'             =>  SummaryResource::collection($sales),
+            'orders'            =>  SummaryResource::collection($orders),
 
         ];
     }
