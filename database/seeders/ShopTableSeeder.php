@@ -20,21 +20,21 @@ class ShopTableSeeder extends Seeder
         $shop = Shop::create([
             "name"              => "Chinsapo Corner Shop",
             "location"          => "Chinsapo, Lilongwe",
-            "account_balance"   => 0,
+            "account_balance"   => 50000,
         ]);
         $this->seedProducts($shop);
 
         $shop = Shop::create([
             "name"              => "Area 23 Shop",
             "location"          => "Area 23, Lilongwe",
-            "account_balance"   => 0,
+            "account_balance"   => 60000,
         ]);
         $this->seedProducts($shop);
 
         $shop = Shop::create([
             "name"              => "Quick Stop",
             "location"          => "Bunda, Lilongwe",
-            "account_balance"   => 0,
+            "account_balance"   => 70000,
         ]);
         $this->seedProducts($shop);
 
