@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CategoryResource;
 use App\Http\Resources\ShopCollection;
 use App\Http\Resources\SummaryCollection;
 use App\Http\Resources\SummaryResource;
+use App\Http\Resources\UserResource;
+use App\Models\Category;
 use App\Models\Shop;
 use App\Models\Summary;
 use App\Models\User;
@@ -20,22 +23,21 @@ class AppController extends Controller
 
     public function index()
     {
-        $shop = [];
+        $users = [];
         $user = User::find(Auth::id());
+
         if($user->hasRole('administrator')){
             $shops = Shop::all();
+            $users = User::where('id',"!=",Auth::id())->get();
         }else{
             $shops[] = $user->shop;
         }
-
-
-//        $sales = Summary::where('type',$this->SALE)->orderBy('date','desc')->paginate($this->PAGINATE);
-//        $orders = Summary::where('type',$this->ORDER)->orderBy('date','desc')->paginate($this->PAGINATE);
+        $categories = Category::orderBy("name","asc")->get();
 
         return response()->json([
-            "shops" => new ShopCollection($shops),
-//            "sales"         => new SummaryCollection($sales),
-//            "orders"         => new SummaryCollection($orders),
+            "shops"         => new ShopCollection($shops),
+            "users"         => UserResource::collection($users),
+            "categories"    => CategoryResource::collection($categories)
         ]);
     }
 
