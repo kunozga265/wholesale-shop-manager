@@ -20,7 +20,7 @@ class UserResource extends JsonResource
             'last_name'     => $this->last_name,
             'code'          => intval($this->code),
             'role'          =>  $this->roles()->first(),
-            'shop_name'     => $this->shop != null ? $this->shop->name : "",
+            'shop_name'     => $this->shop?->name
         ];
     }
 }
