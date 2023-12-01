@@ -43,7 +43,24 @@ Route::group(["middleware"=>["auth:sanctum","roles"]],function (){
     ]);
 
     //Shops
-    Route::get('/shops', [\App\Http\Controllers\ShopController::class,'index']);
+    Route::group(["prefix"=>"shops"],function (){
+
+        Route::get("/", [
+            "uses" => "App\Http\Controllers\ShopController@index",
+        ]);
+
+        Route::post("/", [
+            "uses"  => "App\Http\Controllers\ShopController@store",
+            'roles' => ['administrator']
+        ]);
+
+        Route::post("/{id}", [
+            "uses"  => "App\Http\Controllers\ShopController@update",
+            'roles' => ['administrator']
+        ]);
+
+    });
+
 
     //Summaries
     Route::group(["prefix"=>"summaries"],function (){

@@ -8,6 +8,8 @@ use App\Http\Resources\SummaryCollection;
 use App\Http\Resources\SummaryResource;
 use App\Http\Resources\UserResource;
 use App\Models\Category;
+use App\Models\Inventory;
+use App\Models\Product;
 use App\Models\Shop;
 use App\Models\Summary;
 use App\Models\User;
@@ -63,5 +65,17 @@ class AppController extends Controller
 
         //return unique code
         return $code;
+    }
+
+    public function seedProducts (Shop $shop)
+    {
+        $products = Product::all();
+        foreach ($products as $product){
+            Inventory::create([
+                "shop_id"       =>  $shop->id,
+                "product_id"    =>  $product->id,
+                "stock"         =>  rand(0,20),
+            ]);
+        }
     }
 }

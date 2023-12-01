@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Http\Controllers\AppController;
 use App\Models\Inventory;
 use App\Models\Product;
 use App\Models\Shop;
@@ -22,35 +23,25 @@ class ShopTableSeeder extends Seeder
             "location"          => "Chinsapo, Lilongwe",
             "account_balance"   => 50000,
         ]);
-        $this->seedProducts($shop);
+        (new AppController())->seedProducts($shop);
 
         $shop = Shop::create([
             "name"              => "Area 23 Shop",
             "location"          => "Area 23, Lilongwe",
             "account_balance"   => 60000,
         ]);
-        $this->seedProducts($shop);
+        (new AppController())->seedProducts($shop);
 
         $shop = Shop::create([
             "name"              => "Quick Stop",
             "location"          => "Bunda, Lilongwe",
             "account_balance"   => 70000,
         ]);
-        $this->seedProducts($shop);
+        (new AppController())->seedProducts($shop);
 
 
 
     }
 
-    private function seedProducts (Shop $shop)
-    {
-        $products = Product::all();
-        foreach ($products as $product){
-            Inventory::create([
-                "shop_id"       =>  $shop->id,
-                "product_id"    =>  $product->id,
-                "stock"         =>  rand(0,20),
-            ]);
-        }
-    }
+
 }
