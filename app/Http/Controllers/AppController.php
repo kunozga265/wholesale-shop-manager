@@ -28,7 +28,7 @@ class AppController extends Controller
 
         if($user->hasRole('administrator')){
             $shops = Shop::all();
-            $users = User::where('id',"!=",Auth::id())->get();
+            $users = User::where('id',"!=",Auth::id())->orderBy("first_name","asc")->get();
         }else{
             $shops[] = $user->shop;
         }
