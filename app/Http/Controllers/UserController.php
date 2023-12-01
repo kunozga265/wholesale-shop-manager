@@ -42,7 +42,7 @@ class UserController extends Controller
 //            'device_name'   => ['required'],
             'password'       => ['required','confirmed'],
             'role_id'       => ['required'],
-            'shop_id'       => ['required'],
+//            'shop_id'       => ['required'],
         ]);
 
         $user=User::create([
