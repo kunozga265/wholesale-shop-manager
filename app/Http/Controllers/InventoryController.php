@@ -10,6 +10,7 @@ class InventoryController extends Controller
     public function update(Request $request, int $id)
     {
         $request->validate([
+            'item'      =>  'required',
             'stock'     =>  'required',
             'buying'    =>  'required',
             'selling'   =>  'required',
@@ -22,6 +23,7 @@ class InventoryController extends Controller
 
         // update product
         $inventory->product()->update([
+            'item'      => $request->item,
             'buying'    => $request->buying,
             'selling'   => $request->selling
         ]);
