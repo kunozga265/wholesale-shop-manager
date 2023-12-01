@@ -40,14 +40,16 @@ class UserController extends Controller
             "first_name"     => ['required','string', 'max:255'],
             "last_name"      => ['required','string', 'max:255'],
 //            'device_name'   => ['required'],
-            'password'       => ['required'],
+            'password'       => ['required','confirmed'],
             'role_id'       => ['required'],
+            'shop_id'       => ['required'],
         ]);
 
         $user=User::create([
-            "first_name"     => ucwords($request->first_name),
-            "last_name"    => ucwords($request->last_name),
-            "code"         => (new AppController())->generateUniqueCode(),
+            "first_name"    => ucwords($request->first_name),
+            "last_name"     => ucwords($request->last_name),
+            "shop_id"       => $request->shop_id,
+            "code"          => (new AppController())->generateUniqueCode(),
             "password"      => bcrypt($request->password),
         ]);
 
