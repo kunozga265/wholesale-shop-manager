@@ -70,4 +70,83 @@ class SummaryController extends Controller
 
         return response()->json(new SummaryResource($summary));
     }
+
+    public function update(Request $request, int $id)
+    {
+        $request->validate([
+            "amount"        => 'required',
+            "products"      => 'required',
+        ]);
+
+        /*
+        * undo changes*
+        * 1. Correct Amount
+        * 2. Correct Stock
+        */
+
+        $summary = Summary::find($id);
+        $difference = $summary->amount - $request->amount;
+
+        //ORDER
+        if($summary->type){
+            // More materials have been ordered,
+            // Stock should increase and account balance deducted
+
+            //Deducts when differences is greater than initial amount and adds if it is lesser
+            $summary->shop()->update([
+                'account_balance' => $summary->shop->account_balance - $difference
+            ]);
+        }else{
+            //Adds when differences is greater than initial amount and subtracts if it is lesser
+            $summary->shop()->update([
+                'account_balance' => $summary->shop->account_balance + $difference
+            ]);
+        }
+
+        // Re-store stock to the original value
+        foreach (json_decode($summary->products) as $product){
+            $inventory = Inventory::findOrFail($product["inventory_id"]);
+            $inventory->update([
+                "stock" => $product["stock"]
+            ]);
+        }
+
+        // Recalculate the summary
+        // ORDER
+        if ($summary->type) {
+            foreach ($request->products as $product){
+                $inventory = Inventory::findOrFail($product["inventory_id"]);
+                $inventory->update([
+                    "stock" => $inventory->stock + $product["quantity"]
+                ]);
+            }
+
+            //add total to shop
+            $summary->shop()->update([
+                "account_balance"   => $summary->shop()->account_balance - $request->amount
+            ]);
+        }
+        //SALEk
+        else{
+            foreach ($request->products as $product){
+                $inventory = Inventory::findOrFail($product["inventory_id"]);
+                $inventory->update([
+                    "stock" => $inventory->stock - $product["quantity"]
+                ]);
+            }
+
+            //subtract total from shop
+            $summary->shop()->update([
+                "account_balance"   => $summary->shop()->account_balance + $request->amount
+            ]);
+        }
+
+        $summary->update([
+            "amount" => $request->amount,
+            "products" => json_encode($request->products),
+        ]);
+
+        return response()->json(new SummaryResource($summary));
+
+    }
 }

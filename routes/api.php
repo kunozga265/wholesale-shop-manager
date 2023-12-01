@@ -75,7 +75,6 @@ Route::group(["middleware"=>["auth:sanctum","roles"]],function (){
 
         Route::post("/{id}", [
             "uses" => "App\Http\Controllers\SummaryController@update",
-            'roles' =>['administrator']
         ]);
     });
 
