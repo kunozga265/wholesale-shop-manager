@@ -37,16 +37,18 @@ Route::group(["middleware"=>["auth:sanctum","roles"]],function (){
     ]);
 
     // Inventory
-    Route::post("/inventory/{id}", [
-            "uses" => "App\Http\Controllers\InventoryController@update",
-            'roles' =>['administrator']
-    ]);
+    Route::group(["prefix"=>"inventory"],function () {
 
-    // Inventory
-    Route::post("/products", [
-            "uses" => "App\Http\Controllers\ProductController@store",
-            'roles' =>['administrator']
-    ]);
+        Route::post("/{id}", [
+            "uses" => "App\Http\Controllers\InventoryController@update",
+            'roles' => ['administrator']
+        ]);
+
+        Route::post("/", [
+            "uses" => "App\Http\Controllers\InventoryController@store",
+            'roles' => ['administrator']
+        ]);
+    });
 
     //Shops
     Route::group(["prefix"=>"shops"],function (){

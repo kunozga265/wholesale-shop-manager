@@ -7,6 +7,27 @@ use Illuminate\Http\Request;
 
 class InventoryController extends Controller
 {
+    public function store(Request $request)
+    {
+        $request->validate([
+            'item'          =>  'required',
+            'stock'         =>  'required',
+            'buying'        =>  'required',
+            'selling'       =>  'required',
+            'category_id'   => 'required',
+            'shop_id'       => 'required',
+        ]);
+
+        $product = (new ProductController())->store($request);
+
+        $inventory = Inventory::create([
+            'product_id'    => $product->id,
+            'shop_id'       => $request->shop_id,
+            'stock'         => $request->stock,
+        ]);
+
+        return response()->json(['message'=>'Product successfully added!'], 201);
+    }
     public function update(Request $request, int $id)
     {
         $request->validate([
