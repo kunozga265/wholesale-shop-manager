@@ -20,7 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/products/seeder', [\App\Http\Controllers\ProductController::class,'store']);
+Route::post('/products/seeder', [\App\Http\Controllers\ProductController::class,'seeder']);
 
 Route::post("/users/login",[UserController::class,'login']);
 
@@ -39,6 +39,12 @@ Route::group(["middleware"=>["auth:sanctum","roles"]],function (){
     // Inventory
     Route::post("/inventory/{id}", [
             "uses" => "App\Http\Controllers\InventoryController@update",
+            'roles' =>['administrator']
+    ]);
+
+    // Inventory
+    Route::post("/products", [
+            "uses" => "App\Http\Controllers\ProductController@store",
             'roles' =>['administrator']
     ]);
 

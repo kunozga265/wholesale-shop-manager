@@ -74,7 +74,7 @@ class AppController extends Controller
             Inventory::create([
                 "shop_id"       =>  $shop->id,
                 "product_id"    =>  $product->id,
-                "stock"         =>  rand(0,20),
+                "stock"         =>  0,
             ]);
         }
     }
