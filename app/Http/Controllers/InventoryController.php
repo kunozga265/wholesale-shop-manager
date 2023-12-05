@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Inventory;
+use App\Models\Shop;
 use Illuminate\Http\Request;
 
 class InventoryController extends Controller
@@ -15,16 +16,20 @@ class InventoryController extends Controller
             'buying'        =>  'required',
             'selling'       =>  'required',
             'category_id'   => 'required',
-            'shop_id'       => 'required',
+//            'shop_id'       => 'required',
         ]);
 
         $product = (new ProductController())->store($request);
 
-        $inventory = Inventory::create([
-            'product_id'    => $product->id,
-            'shop_id'       => $request->shop_id,
-            'stock'         => $request->stock,
-        ]);
+        $shops = Shop::all();
+
+        foreach ($shops as $shop) {
+            Inventory::create([
+                'product_id' => $product->id,
+                'shop_id' => $shop->id,
+                'stock' => $request->stock,
+            ]);
+        }
 
         return response()->json(['message'=>'Product successfully added!'], 201);
     }
