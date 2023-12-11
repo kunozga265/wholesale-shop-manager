@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ShopCollection;
 use App\Models\Shop;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ShopController extends Controller
 {
@@ -30,6 +31,8 @@ class ShopController extends Controller
 
         (new AppController())->seedProducts($shop);
 
+        (new NotificationController())->notify("SHOP_NEW", $request->name." Shop has been added in the system", shop_id: $shop->id, user_id: Auth::id());
+
         return response()->json($shop);
     }
 
@@ -48,6 +51,8 @@ class ShopController extends Controller
             "location"          => $request->location,
             "account_balance"   => $request->account_balance,
         ]);
+
+        (new NotificationController())->notify("SHOP_UPDATE", $request->name." Shop has been updated", shop_id: $shop->id, user_id: Auth::id());
 
         return response()->json($shop);
     }

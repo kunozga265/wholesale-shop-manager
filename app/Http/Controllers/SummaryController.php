@@ -63,10 +63,13 @@ class SummaryController extends Controller
             "amount" => $request->amount,
             "date" => $request->date,
             "shop_id" => $request->shop_id,
-            "user_id" => /*Auth::id()*/ 1,
+            "user_id" => Auth::id(),
             "type" => $request->type,
             "products" => json_encode($request->products),
         ]);
+
+        $type = $request->type == 0 ? "Sale" : "Order";
+        (new NotificationController())->notify("SUMMARY_NEW",  "New $type under ".$shop->name." has been added", shop_id: $shop->id, user_id: Auth::id());
 
         return response()->json(new SummaryResource($summary));
     }
@@ -84,30 +87,23 @@ class SummaryController extends Controller
         * 2. Correct Stock
         */
 
-        $summary = Summary::find($id);
-        $difference = $summary->amount - $request->amount;
+        $summary = Summary::findOrFail($id);
 
         //ORDER
         if($summary->type){
-            // More materials have been ordered,
-            // Stock should increase and account balance deducted
-
             //Deducts when differences is greater than initial amount and adds if it is lesser
-            $summary->shop()->update([
-                'account_balance' => $summary->shop->account_balance - $difference
-            ]);
+            $oldBalance = $summary->shop->account_balance + $summary->amount;
         }else{
             //Adds when differences is greater than initial amount and subtracts if it is lesser
-            $summary->shop()->update([
-                'account_balance' => $summary->shop->account_balance + $difference
-            ]);
+            $oldBalance = $summary->shop->account_balance - $summary->amount;
         }
 
         // Re-store stock to the original value
-        foreach (json_decode($summary->products) as $product){
-            $inventory = Inventory::findOrFail($product["inventory_id"]);
+        $products = json_decode($summary->products);
+        for($index = 0; $index < count($products);  $index++){
+            $inventory = Inventory::findOrFail($products[$index]->inventory_id);
             $inventory->update([
-                "stock" => $product["stock"]
+                "stock" => $products[$index]->stock
             ]);
         }
 
@@ -123,10 +119,10 @@ class SummaryController extends Controller
 
             //add total to shop
             $summary->shop()->update([
-                "account_balance"   => $summary->shop()->account_balance - $request->amount
+                "account_balance"   => $oldBalance - $request->amount
             ]);
         }
-        //SALEk
+        //SALE
         else{
             foreach ($request->products as $product){
                 $inventory = Inventory::findOrFail($product["inventory_id"]);
@@ -137,7 +133,7 @@ class SummaryController extends Controller
 
             //subtract total from shop
             $summary->shop()->update([
-                "account_balance"   => $summary->shop()->account_balance + $request->amount
+                "account_balance"   => $oldBalance + $request->amount
             ]);
         }
 
@@ -145,6 +141,9 @@ class SummaryController extends Controller
             "amount" => $request->amount,
             "products" => json_encode($request->products),
         ]);
+
+        $type = $summary->type == 0 ? "Sale" : "Order";
+        (new NotificationController())->notify("SUMMARY_UPDATE",  "$type under ".$summary->shop->name." has been updated", shop_id: $summary->shop->id, user_id: Auth::id());
 
         return response()->json(new SummaryResource($summary));
 

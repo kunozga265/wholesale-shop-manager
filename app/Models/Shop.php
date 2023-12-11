@@ -19,6 +19,11 @@ class Shop extends Model
         return $this->hasMany(Summary::class);
     }
 
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+
     protected $fillable=[
         "name",
         "location",

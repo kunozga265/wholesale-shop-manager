@@ -14,6 +14,11 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+
     protected $fillable=[
         "item",
         "category_id",

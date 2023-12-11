@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Inventory;
 use App\Models\Shop;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class InventoryController extends Controller
 {
@@ -31,6 +32,8 @@ class InventoryController extends Controller
             ]);
         }
 
+        (new NotificationController())->notify("INVENTORY_NEW", $request->item." has been added to the inventory", user_id: Auth::id());
+
         return response()->json(['message'=>'Product successfully added!'], 201);
     }
     public function update(Request $request, int $id)
@@ -53,6 +56,8 @@ class InventoryController extends Controller
             'buying'    => $request->buying,
             'selling'   => $request->selling
         ]);
+
+        (new NotificationController())->notify("INVENTORY_UPDATE", $request->item." has been updated in the inventory", user_id: Auth::id());
 
         return response()->json(['message'=>'Product successfully update!'], 201);
     }

@@ -22,6 +22,11 @@ class User extends Authenticatable
         return $this->belongsTo(Shop::class);
     }
 
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+
     public function hasAnyRole($roles)
     {
         if(is_array($roles)){
