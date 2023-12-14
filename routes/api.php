@@ -66,14 +66,12 @@ Route::group(["middleware"=>["auth:sanctum","roles"]],function (){
             "uses"  => "App\Http\Controllers\ShopController@update",
             'roles' => ['administrator']
         ]);
-
     });
-
 
     //Summaries
     Route::group(["prefix"=>"summaries"],function (){
 
-        Route::get("/", [
+        Route::get("/{shop_id}/{start_date}/{end_date}", [
             "uses" => "App\Http\Controllers\SummaryController@index",
         ]);
 
@@ -86,5 +84,22 @@ Route::group(["middleware"=>["auth:sanctum","roles"]],function (){
         ]);
     });
 
+    //Expenses
+    Route::group(["prefix"=>"expenses"],function (){
 
+        Route::get("/{shop_id}", [
+            "uses" => "App\Http\Controllers\ExpenseController@index",
+            'roles' => ['administrator']
+        ]);
+
+        Route::post("/", [
+            "uses"  => "App\Http\Controllers\ExpenseController@store",
+            'roles' => ['administrator']
+        ]);
+
+        Route::post("/{id}", [
+            "uses"  => "App\Http\Controllers\ExpenseController@update",
+            'roles' => ['administrator']
+        ]);
+    });
 });

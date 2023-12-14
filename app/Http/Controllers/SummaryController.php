@@ -12,10 +12,11 @@ use Illuminate\Support\Facades\Auth;
 
 class SummaryController extends Controller
 {
-    public function index()
+    public function index($shop_id, $start_date, $end_date)
     {
-        $summaries = Summary::orderBy("date", "desc")->paginate(20);
-        return response()->json(new SummaryCollection($summaries));
+        $shop = Shop::findOrFail($shop_id);
+        $summaries = $shop->summaries()->where("date", ">=", $start_date)->where("date", "<=", $end_date)->orderBy("date", "desc")->get();
+        return response()->json(SummaryResource::collection($summaries));
     }
 
     public function store(Request $request)
