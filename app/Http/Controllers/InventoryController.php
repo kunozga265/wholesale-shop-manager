@@ -57,7 +57,7 @@ class InventoryController extends Controller
             'selling'   => $request->selling
         ]);
 
-        (new NotificationController())->notify("INVENTORY_UPDATE", $request->item." has been updated in the inventory", user_id: Auth::id());
+        (new NotificationController())->notify("INVENTORY_UPDATE", $request->item." has been updated in the inventory", shop_id: $inventory->shop->id, user_id: Auth::id());
 
         return response()->json(['message'=>'Product successfully update!'], 201);
     }

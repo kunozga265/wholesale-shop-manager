@@ -102,4 +102,22 @@ Route::group(["middleware"=>["auth:sanctum","roles"]],function (){
             'roles' => ['administrator']
         ]);
     });
+    //Expenses
+    Route::group(["prefix"=>"notifications"],function (){
+
+        Route::get("/", [
+            "uses" => "App\Http\Controllers\NotificationController@index",
+        ]);
+
+        Route::get("/by-shop/{shop_id}", [
+            "uses" => "App\Http\Controllers\NotificationController@byShop",
+            'roles' => ['administrator']
+        ]);
+
+        Route::get("/by-user/{user_id}", [
+            "uses" => "App\Http\Controllers\NotificationController@byUser",
+            'roles' => ['administrator']
+        ]);
+
+    });
 });
