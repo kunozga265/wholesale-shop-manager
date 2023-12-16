@@ -31,10 +31,34 @@ Route::group(["middleware"=>["auth:sanctum","roles"]],function (){
         "uses" => "App\Http\Controllers\AppController@index",
     ]);
 
-    Route::post("/users/register", [
+    Route::group(["prefix"=>"users"],function () {
+
+        Route::post("/register", [
             "uses" => "App\Http\Controllers\UserController@register",
-            'roles' =>['administrator']
-    ]);
+            'roles' => ['administrator']
+        ]);
+
+        Route::post("/change-password", [
+            "uses" => "App\Http\Controllers\UserController@changePassword",
+        ]);
+
+        Route::post("/reset-password/{user_id}", [
+            "uses" => "App\Http\Controllers\UserController@resetPassword",
+            'roles' => ['administrator']
+        ]);
+
+        Route::post("/disable-user/{user_id}", [
+            "uses" => "App\Http\Controllers\UserController@disableUser",
+            'roles' => ['administrator']
+        ]);
+
+        Route::post("/enable-user/{user_id}", [
+            "uses" => "App\Http\Controllers\UserController@enableUser",
+            'roles' => ['administrator']
+        ]);
+
+    });
+
 
     // Inventory
     Route::group(["prefix"=>"inventory"],function () {
