@@ -28,7 +28,7 @@ class UserController extends Controller
             ]);
         }
 
-        if (!$user->hasAnyRole(["adminstrator","normal"])){
+        if (!$user->hasAnyRole(["administrator","normal"])){
             return response()->json(["message" => "Access Denied"],400);
         }
 
