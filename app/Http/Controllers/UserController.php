@@ -28,7 +28,7 @@ class UserController extends Controller
             ]);
         }
 
-        if (!$user->hasAnyRole(["administrator","normal"])){
+        if ($user->hasAnyRole(["disabled"])){
             return response()->json(["message" => "Access Denied"],400);
         }
 
@@ -96,6 +96,10 @@ class UserController extends Controller
     {
         $user = User::findOrFail($user_id);
         $user->roles()->detach();
+
+        $role = Role::where("name","disabled")->first();
+        $user->roles()->attach($role);
+
         (new NotificationController())->notify("USER_DISABLED", $user->first_name." ".$user->last_name." has been disabled. They no longer have access to the system", user_id: Auth::id());
         return response()->json(["message"=>"Successfully disabled user"]);
     }

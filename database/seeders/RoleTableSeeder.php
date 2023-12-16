@@ -22,5 +22,9 @@ class RoleTableSeeder extends Seeder
         Role::create([
             "name"=>"normal"
         ]);
+
+        Role::create([
+            "name"=>"disabled"
+        ]);
     }
 }
