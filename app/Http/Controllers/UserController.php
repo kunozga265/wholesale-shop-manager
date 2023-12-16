@@ -111,6 +111,7 @@ class UserController extends Controller
         ]);
 
         $user = User::findOrFail($user_id);
+        $user->roles()->detach();
         $user->roles()->attach([$request->role_id]);
         (new NotificationController())->notify("USER_ENABLED", $user->first_name." ".$user->last_name." has been enabled. They now have access to the system", user_id: Auth::id());
         return response()->json(["message"=>"Successfully enabled user"]);
