@@ -15,12 +15,13 @@ class NotificationResource extends JsonResource
     public function toArray($request)
     {
         return [
-            "id"                =>  $this->id,
+            "id"                =>  intval($this->id),
             "type"              =>  $this->type,
             "message"           =>  $this->message,
 //            "product"           =>  $this->product,
-            "shop"              =>  $this->shop,
-            "user"              =>  new UserResource($this->user),
+//            "shop"              =>  $this->shop,
+//            "user"              =>  new UserResource($this->user),
+            "date"              =>  intval($this->created_at->getTimestamp()),
         ];
     }
 }

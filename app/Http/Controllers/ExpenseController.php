@@ -8,6 +8,7 @@ use App\Models\Expense;
 use App\Models\Shop;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ExpenseController extends Controller
 {
@@ -41,6 +42,8 @@ class ExpenseController extends Controller
            'account_balance' => $old_balance - $request->amount
         ]);
 
+        (new NotificationController())->notify("EXPENSE_NEW", $request->title." expense has been recorded under ".$expense->shop->name, shop_id: $expense->shop->id, user_id: Auth::id());
+
         return response()->json([
             "message" => "Successfully recorded the expense"
         ]);
@@ -68,6 +71,8 @@ class ExpenseController extends Controller
             "description"   => $request->description,
             "amount"        => $request->amount,
         ]);
+
+        (new NotificationController())->notify("EXPENSE_UPDATE", $request->title." expense under ".$expense->shop->name." has been updated", shop_id: $expense->shop->id, user_id: Auth::id());
 
         return response()->json([
             "message" => "Successfully updated the expense"
